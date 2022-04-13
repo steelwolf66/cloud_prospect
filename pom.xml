@@ -71,14 +71,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- ok https 工具 -->
-
-        <dependency>
-            <groupId>com.ejlchina</groupId>
-            <artifactId>okhttps-jackson</artifactId>
-            <version>3.5.0</version>
-        </dependency>
     </dependencies>
 
     <build>

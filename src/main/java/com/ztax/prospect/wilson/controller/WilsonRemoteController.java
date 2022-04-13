@@ -1,12 +1,7 @@
 package com.ztax.prospect.wilson.controller;
 
-import com.ejlchina.okhttps.HttpResult;
-import com.ejlchina.okhttps.HttpUtils;
 import com.ztax.common.result.Result;
 import com.ztax.common.utils.JsonUtils;
-import com.ztax.prospect.wilson.entity.Macrovariable;
-import com.ztax.prospect.wilson.entity.Pd;
-import com.ztax.prospect.wilson.entity.Relativity;
 import com.ztax.prospect.wilson.entity.WilsonParamEntity;
 import com.ztax.prospect.wilson.service.impl.WilsonRemoteServiceImpl;
 import lombok.AllArgsConstructor;
@@ -18,10 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,14 +39,10 @@ public class WilsonRemoteController {
         ResponseEntity<Map> mapResponseEntity = template
                 .postForEntity("http://103.79.202.131:31000/wilson/wilson_equation", wilsonParamEntity, Map.class, paramMap);
 
-        HttpResult postResult = HttpUtils.sync("http://103.79.202.131:31000/wilson/wilson_equation")
-                .setBodyPara(wilsonParamEntity)
-                .post();
 
         log.info("param json :{}", JsonUtils.toString(wilsonParamEntity));
 
         log.info("restTemplate :{}", mapResponseEntity.getBody());
-        log.info("okHttps :{}", postResult.getBody());
         return Result.success(mapResponseEntity.getBody());
     }
 
