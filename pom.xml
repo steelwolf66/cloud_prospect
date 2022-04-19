@@ -71,6 +71,35 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- springboot 监控 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- 数据库 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- 本地基础包 -->
+        <dependency>
+            <groupId>com.ztax</groupId>
+            <artifactId>cloud-common</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+
+        <!-- ztax mybatis plus -->
+        <dependency>
+            <groupId>com.ztax.zframe</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.3.1</version>
+        </dependency>
     </dependencies>
 
     <build>

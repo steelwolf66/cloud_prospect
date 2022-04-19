@@ -1,12 +1,27 @@
 package com.ztax.prospect.wilson.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.math.BigDecimal;
 
-@Data
 public class Macrovariable {
     private String dataDate;
-    private BigDecimal value;
 
+    @JsonProperty(value = "Value")
+    private String macroValue;
+
+    public String getDataDate() {
+        return dataDate;
+    }
+
+    public void setDataDate(String dataDate) {
+        this.dataDate = dataDate;
+    }
+
+    public String getMacroValue() {
+        return macroValue;
+    }
+
+    public void setMacroValue(String macroValue) {
+        this.macroValue = macroValue;
+    }
 }

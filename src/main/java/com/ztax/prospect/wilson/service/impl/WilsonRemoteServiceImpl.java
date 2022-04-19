@@ -3,56 +3,74 @@ package com.ztax.prospect.wilson.service.impl;
 import com.ztax.common.utils.JsonUtils;
 import com.ztax.prospect.wilson.entity.Macrovariable;
 import com.ztax.prospect.wilson.entity.Pd;
-import com.ztax.prospect.wilson.entity.Relativity;
 import com.ztax.prospect.wilson.entity.WilsonParamEntity;
 import com.ztax.prospect.wilson.service.WilsonRemoteService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class WilsonRemoteServiceImpl implements WilsonRemoteService {
     @Override
     public WilsonParamEntity loadWilsonParamEntity() {
-        WilsonParamEntity paramEntityFromJson = getParamEntityFromJson();
-//        WilsonParamEntity paramEntityByM = getParamEntityByManual();
-        return paramEntityFromJson;
+//        WilsonParamEntity paramEntityFromJson = getParamEntityFromJson();
+        WilsonParamEntity paramEntityByM = getParamEntityByManual();
+        return paramEntityByM;
     }
 
     private WilsonParamEntity getParamEntityByManual() {
         WilsonParamEntity wilsonParamEntity = new WilsonParamEntity();
         wilsonParamEntity.setUuid("e010fb79e69213a9acd0f225888cfc19");
 
-        Pd pd = new Pd();
-        pd.setEndDate("2020-01-02");
-        pd.setPd(BigDecimal.valueOf(0.56));
+        Pd pd1 = new Pd();
+        pd1.setEndDate("2021-01-31");
+        pd1.setPd("0.031");
 
-        wilsonParamEntity.setPdList(Arrays.asList(pd));
-        wilsonParamEntity.setpValue(BigDecimal.valueOf(0.12));
-        wilsonParamEntity.setR2(BigDecimal.valueOf(0.1));
-        wilsonParamEntity.setVifType(0);
-        wilsonParamEntity.setEquationPValue(BigDecimal.valueOf(0.05));
-        wilsonParamEntity.setEquationR2(BigDecimal.valueOf(0.5));
-        wilsonParamEntity.setVifValue(BigDecimal.valueOf(10));
-        wilsonParamEntity.setModelType(0);
-        wilsonParamEntity.setSlentry(BigDecimal.valueOf(0.15));
-        wilsonParamEntity.setSlstay(BigDecimal.valueOf(0.15));
-        Relativity relativity = new Relativity();
-        relativity.setX1(BigDecimal.valueOf(1));
-        relativity.setX2(BigDecimal.valueOf(-1));
-        relativity.setX3(BigDecimal.valueOf(1));
-        relativity.setX4(BigDecimal.valueOf(-1));
-        relativity.setX5(BigDecimal.valueOf(1));
+        Pd pd2 = new Pd();
+        pd2.setEndDate("2021-03-31");
+        pd2.setPd("0.041");
+
+        wilsonParamEntity.setPdList(Arrays.asList(pd1, pd2));
+        wilsonParamEntity.setpValue("0.12");
+        wilsonParamEntity.setR2("0.23");
+        wilsonParamEntity.setVifType("1");
+        wilsonParamEntity.setEquationPValue("0.34");
+        wilsonParamEntity.setEquationR2("0.41");
+        wilsonParamEntity.setVifValue("0.41");
+        wilsonParamEntity.setModelType("2");
+        wilsonParamEntity.setSlentry("1.12345678");
+        wilsonParamEntity.setSlstay("2.12345678");
+        Map<String,String> relativity = new HashMap<>();
+        relativity.put("X1","1");
+        relativity.put("X2","-1");
+        relativity.put("X3","-1");
+        relativity.put("X4","-1");
+        relativity.put("X5","1");
         wilsonParamEntity.setRelativity(relativity);
-
-        Macrovariable macrovariable = new Macrovariable();
-        macrovariable.setDataDate("2020-02-21");
-        macrovariable.setValue(BigDecimal.valueOf(0.54));
         HashMap<String, List<Macrovariable>> objectMap = new HashMap<>();
-        objectMap.put("x1", Arrays.asList(macrovariable));
+        Macrovariable macrovariable1 = new Macrovariable();
+        macrovariable1.setDataDate("2021-01-31");
+        macrovariable1.setMacroValue("0.7");
+
+        Macrovariable macrovariable2 = new Macrovariable();
+        macrovariable2.setDataDate("2021-03-31");
+        macrovariable2.setMacroValue("0.6");
+
+        Macrovariable macrovariable3 = new Macrovariable();
+        macrovariable3.setDataDate("2021-01-31");
+        macrovariable3.setMacroValue("0.5");
+
+        Macrovariable macrovariable4 = new Macrovariable();
+        macrovariable4.setDataDate("2021-03-31");
+        macrovariable4.setMacroValue("0.8");
+        List<Macrovariable> list1 = new ArrayList<>();
+        list1.add(macrovariable1);
+        list1.add(macrovariable2);
+        List<Macrovariable> list2 = new ArrayList<>();
+        list2.add(macrovariable3);
+        list2.add(macrovariable4);
+        objectMap.put("X1", list1);
+        objectMap.put("X2", list2);
         wilsonParamEntity.setMacrovariableList(Arrays.asList(objectMap));
         return wilsonParamEntity;
     }
@@ -72,18 +90,18 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
                 "        {\n" +
                 "            \"x1\": [\n" +
                 "                {\n" +
-                "                    \"dataDate\": \"2021-01-31\",\"value\": \"0.7\"\n" +
+                "                    \"dataDate\": \"2021-01-31\",\"Value\": \"0.7\"\n" +
                 "                },\n" +
                 "                {\n" +
-                "                    \"dataDate\": \"2021-03-31\",\"value\": \"0.6\"\n" +
+                "                    \"dataDate\": \"2021-03-31\",\"Value\": \"0.6\"\n" +
                 "                }\n" +
                 "            ],\n" +
                 "\t\t\t\"x2\": [\n" +
                 "                {\n" +
-                "                    \"dataDate\": \"2021-01-31\",\"value\": \"0.5\"\n" +
+                "                    \"dataDate\": \"2021-01-31\",\"Value\": \"0.5\"\n" +
                 "                },\n" +
                 "                {\n" +
-                "                    \"dataDate\": \"2021-03-31\",\"value\": \"0.8\"\n" +
+                "                    \"dataDate\": \"2021-03-31\",\"Value\": \"0.8\"\n" +
                 "                }\n" +
                 "            ]\n" +
                 "        }\n" +

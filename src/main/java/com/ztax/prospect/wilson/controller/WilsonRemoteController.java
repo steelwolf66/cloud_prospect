@@ -3,6 +3,7 @@ package com.ztax.prospect.wilson.controller;
 import com.ztax.common.result.Result;
 import com.ztax.common.utils.JsonUtils;
 import com.ztax.prospect.wilson.entity.WilsonParamEntity;
+import com.ztax.prospect.wilson.entity.response.ResponseFromWG;
 import com.ztax.prospect.wilson.service.impl.WilsonRemoteServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -35,15 +35,38 @@ public class WilsonRemoteController {
         WilsonParamEntity wilsonParamEntity = wilsonRemoteService.loadWilsonParamEntity();
 
         RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        String paraString = JsonUtils.toString(wilsonParamEntity);
+        log.info("param json :{}", paraString);
         HashMap paramMap = new HashMap();
-        ResponseEntity<Map> mapResponseEntity = template
-                .postForEntity("http://103.79.202.131:31000/wilson/wilson_equation", wilsonParamEntity, Map.class, paramMap);
 
+        ResponseEntity<String> responseEntity = template.postForEntity("http://103.79.202.131:31000/wilson/wilson_equation", wilsonParamEntity, String.class, paramMap);
 
-        log.info("param json :{}", JsonUtils.toString(wilsonParamEntity));
+        String responseString = "{\n" +
+                "    \"message\": \"单变量分析无保留变量\",\n" +
+                "    \"unanalysisList\": [\n" +
+                "        {\n" +
+                "            \"all_var_params\": {\n" +
+                "                \"X1\": {\n" +
+                "                    \"coef\": -2.8995839922648905,\n" +
+                "                    \"p_value\":\"NaN\",\n" +
+                "                    \"rsquared\": 1.0\n" +
+                "                },\n" +
+                "                \"X2\": {\n" +
+                "                    \"coef\": 0.9665279974216325,\n" +
+                "                    \"p_value\":\"NaN\",\n" +
+                "                    \"rsquared\": 1.0\n" +
+                "                }\n" +
+                "            },\n" +
+                "            \"saved_var_name\": []\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"uuid\": \"e010fb79e69213a9acd0f225888cfc19\"\n" +
+                "}";
 
-        log.info("restTemplate :{}", mapResponseEntity.getBody());
-        return Result.success(mapResponseEntity.getBody());
+        log.info("response:{}", responseEntity.getBody());
+        ResponseFromWG responseFromWG = JsonUtils.toBean(responseString, ResponseFromWG.class);
+        log.info("body  :{}", responseFromWG.toString());
+        return Result.success(responseEntity.getBody());
     }
 
 }

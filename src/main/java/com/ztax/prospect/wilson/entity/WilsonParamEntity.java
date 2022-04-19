@@ -1,6 +1,5 @@
 package com.ztax.prospect.wilson.entity;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -10,19 +9,19 @@ public class WilsonParamEntity {
     private List<Pd> pdList;
     private List<Map<String, List<Macrovariable>>> macrovariableList;
 
-    private BigDecimal pValue;
-    private BigDecimal r2;
-    private BigDecimal equationPValue;
-    private BigDecimal equationR2;
+    private String pValue;
+    private String r2;
+    private String equationPValue;
+    private String equationR2;
 
-    private Integer vifType;
-    private BigDecimal vifValue;
-    private Integer modelType;
+    private String vifType;
+    private String vifValue;
+    private String modelType;
 
-    private BigDecimal slentry;
-    private BigDecimal slstay;
+    private String slentry;
+    private String slstay;
 
-    private Relativity relativity;
+    private Map<String,String> relativity;
 
     public String getUuid() {
         return uuid;
@@ -48,83 +47,83 @@ public class WilsonParamEntity {
         this.macrovariableList = macrovariableList;
     }
 
-    public BigDecimal getpValue() {
+    public String getpValue() {
         return pValue;
     }
 
-    public void setpValue(BigDecimal pValue) {
+    public void setpValue(String pValue) {
         this.pValue = pValue;
     }
 
-    public BigDecimal getR2() {
+    public String getR2() {
         return r2;
     }
 
-    public void setR2(BigDecimal r2) {
+    public void setR2(String r2) {
         this.r2 = r2;
     }
 
-    public BigDecimal getEquationPValue() {
+    public String getEquationPValue() {
         return equationPValue;
     }
 
-    public void setEquationPValue(BigDecimal equationPValue) {
+    public void setEquationPValue(String equationPValue) {
         this.equationPValue = equationPValue;
     }
 
-    public BigDecimal getEquationR2() {
+    public String getEquationR2() {
         return equationR2;
     }
 
-    public void setEquationR2(BigDecimal equationR2) {
+    public void setEquationR2(String equationR2) {
         this.equationR2 = equationR2;
     }
 
-    public Integer getVifType() {
+    public String getVifType() {
         return vifType;
     }
 
-    public void setVifType(Integer vifType) {
+    public void setVifType(String vifType) {
         this.vifType = vifType;
     }
 
-    public BigDecimal getVifValue() {
+    public String getVifValue() {
         return vifValue;
     }
 
-    public void setVifValue(BigDecimal vifValue) {
+    public void setVifValue(String vifValue) {
         this.vifValue = vifValue;
     }
 
-    public Integer getModelType() {
+    public String getModelType() {
         return modelType;
     }
 
-    public void setModelType(Integer modelType) {
+    public void setModelType(String modelType) {
         this.modelType = modelType;
     }
 
-    public BigDecimal getSlentry() {
+    public String getSlentry() {
         return slentry;
     }
 
-    public void setSlentry(BigDecimal slentry) {
+    public void setSlentry(String slentry) {
         this.slentry = slentry;
     }
 
-    public BigDecimal getSlstay() {
+    public String getSlstay() {
         return slstay;
     }
 
-    public void setSlstay(BigDecimal slstay) {
+    public void setSlstay(String slstay) {
         this.slstay = slstay;
     }
 
-    public Relativity getRelativity() {
+    public Map<String,String> getRelativity() {
         return relativity;
     }
 
-    public void setRelativity(Relativity relativity) {
+    public void setRelativity(Map<String,String> relativity) {
         this.relativity = relativity;
     }
 }

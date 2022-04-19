@@ -1,13 +1,11 @@
 package com.ztax.prospect.wilson.entity;
 
 import lombok.Data;
-
-import java.math.BigDecimal;
 @Data
 public class Relativity {
-    private BigDecimal x1;
-    private BigDecimal x2;
-    private BigDecimal x3;
-    private BigDecimal x4;
-    private BigDecimal x5;
+    private String x1;
+    private String x2;
+    private String x3;
+    private String x4;
+    private String x5;
 }
