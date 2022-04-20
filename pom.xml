@@ -59,12 +59,6 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <!-- feign依赖包 -->
-        <dependency>
-            <groupId>com.ztax</groupId>
-            <artifactId>cloud-feign</artifactId>
-            <version>0.0.1</version>
-        </dependency>
         <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

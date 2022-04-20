@@ -3,6 +3,7 @@ package ${package.Controller};
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
+import ${package.ServiceImpl}.${table.serviceImplName};
 import ${superServiceImplClassPackage};;
 import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,5 +14,5 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RequestMapping("/${entity}")
 public class ${entity}Controller{
     @Autowired
-    private ${table.serviceName} ${table.serviceName};
+    private ${table.serviceImplName} ${table.serviceName};
 }
