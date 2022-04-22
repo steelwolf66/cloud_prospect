@@ -5,4 +5,5 @@ import com.ztax.prospect.wilson.entity.WilsonParamEntity;
 public interface WilsonRemoteService {
     WilsonParamEntity loadWilsonParamEntity();
 
+    WilsonParamEntity loadParamEntityFromDB(String planUuid);
 }

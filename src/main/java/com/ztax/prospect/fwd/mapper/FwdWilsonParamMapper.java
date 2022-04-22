@@ -1,8 +1,8 @@
 package com.ztax.prospect.fwd.mapper;
 
-import com.ztax.prospect.fwd.entity.FwdWilsonParam;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ztax.common.aspect.DelFill;
+import com.ztax.prospect.fwd.entity.FwdWilsonParam;
 
 /**
  * <p>

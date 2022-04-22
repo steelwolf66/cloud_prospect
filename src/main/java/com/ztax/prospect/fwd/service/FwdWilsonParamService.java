@@ -1,8 +1,7 @@
 package com.ztax.prospect.fwd.service;
 
-import com.ztax.prospect.fwd.entity.FwdWilsonParam;
 import com.baomidou.mybatisplus.extension.service.IService;
-import java.util.List;
+import com.ztax.prospect.fwd.entity.FwdWilsonParam;
 /**
  * <p>
     *  服务类

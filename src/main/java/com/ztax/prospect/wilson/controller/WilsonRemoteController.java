@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -69,4 +70,16 @@ public class WilsonRemoteController {
         return Result.success(responseEntity.getBody());
     }
 
+    @GetMapping(value = "/wilson/{planUuid}")
+    public Result remoteWilsonByDB(@PathVariable("planUuid")String planUuid) {
+        WilsonParamEntity wilsonParamEntity = wilsonRemoteService.loadParamEntityFromDB(planUuid);
+        log.info("wilsonParamEntityString:{}", wilsonParamEntity);
+        HashMap paramMap = new HashMap();
+
+        RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        ResponseEntity<String> responseEntity = template.postForEntity("http://103.79.202.131:31000/wilson/wilson_equation", wilsonParamEntity, String.class, paramMap);
+        log.info("response:{}", responseEntity.getBody());
+
+        return Result.success(wilsonParamEntity);
+    }
 }

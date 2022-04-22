@@ -1,15 +1,25 @@
 package com.ztax.prospect.wilson.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ztax.common.utils.JsonUtils;
+import com.ztax.prospect.fwd.entity.*;
+import com.ztax.prospect.fwd.service.impl.*;
 import com.ztax.prospect.wilson.entity.Macrovariable;
 import com.ztax.prospect.wilson.entity.Pd;
 import com.ztax.prospect.wilson.entity.WilsonParamEntity;
 import com.ztax.prospect.wilson.service.WilsonRemoteService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class WilsonRemoteServiceImpl implements WilsonRemoteService {
     @Override
     public WilsonParamEntity loadWilsonParamEntity() {
@@ -40,12 +50,12 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
         wilsonParamEntity.setModelType("2");
         wilsonParamEntity.setSlentry("1.12345678");
         wilsonParamEntity.setSlstay("2.12345678");
-        Map<String,String> relativity = new HashMap<>();
-        relativity.put("X1","1");
-        relativity.put("X2","-1");
-        relativity.put("X3","-1");
-        relativity.put("X4","-1");
-        relativity.put("X5","1");
+        Map<String, String> relativity = new HashMap<>();
+        relativity.put("X1", "1");
+        relativity.put("X2", "-1");
+        relativity.put("X3", "-1");
+        relativity.put("X4", "-1");
+        relativity.put("X5", "1");
         wilsonParamEntity.setRelativity(relativity);
         HashMap<String, List<Macrovariable>> objectMap = new HashMap<>();
         Macrovariable macrovariable1 = new Macrovariable();
@@ -124,5 +134,115 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
 
         WilsonParamEntity entityFromJson = JsonUtils.toBean(paramJson, WilsonParamEntity.class);
         return entityFromJson;
+    }
+
+    @Autowired
+    private FwdWilsonParamServiceImpl fwdWilsonParamService;
+    @Autowired
+    private FwdPlanServiceImpl fwdPlanService;
+    @Autowired
+    private FwdDefRateServiceImpl fwdDefRateService;
+    @Autowired
+    private FwdMacroDepServiceImpl fwdMacroDepService;
+    @Autowired
+    private FwdMacroDataServiceImpl fwdMacroDataService;
+    @Autowired
+    private FwdMacroInfoServiceImpl fwdMacroInfoService;
+
+    @Override
+    public WilsonParamEntity loadParamEntityFromDB(String planUuid) {
+        WilsonParamEntity wilsonParamEntity = new WilsonParamEntity();
+        //查询方案实体
+        FwdPlan fwdPlan = fwdPlanService.getById(planUuid);
+        //通过planUUID查询，威尔逊模型参数主体
+        QueryWrapper<FwdWilsonParam> wilsonParamQueryWrapper = new QueryWrapper<>();
+        wilsonParamQueryWrapper.eq("fwd_plan_uuid", planUuid);
+        FwdWilsonParam fwdWilsonParamById = fwdWilsonParamService.getOne(wilsonParamQueryWrapper);
+        //设置对象值
+        wilsonParamEntity.setUuid(fwdWilsonParamById.getParamUuid());
+        wilsonParamEntity.setpValue(String.valueOf(fwdWilsonParamById.getPdValue()));
+        wilsonParamEntity.setVifType(String.valueOf(fwdWilsonParamById.getVifType()));
+        wilsonParamEntity.setVifValue(String.valueOf(fwdWilsonParamById.getVifValue()));
+        wilsonParamEntity.setSlentry(String.valueOf(fwdWilsonParamById.getSlentry()));
+        wilsonParamEntity.setSlstay(String.valueOf(fwdWilsonParamById.getSlstay()));
+        wilsonParamEntity.setR2(String.valueOf(fwdWilsonParamById.getSingleRSquare()));
+        wilsonParamEntity.setModelType(String.valueOf(fwdWilsonParamById.getModelEntryType()));
+        wilsonParamEntity.setEquationPValue(String.valueOf(fwdWilsonParamById.getRegressPdValue()));
+        wilsonParamEntity.setEquationR2(String.valueOf(fwdWilsonParamById.getRegressRSquare()));
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        //构建Pd
+        //Pd
+        List<Pd> pdList = new ArrayList<>();
+        QueryWrapper<FwdDefRate> fwdDefRateQueryWrapper = new QueryWrapper<>();
+        fwdDefRateQueryWrapper.eq("fwd_plan_uuid", planUuid);
+        List<FwdDefRate> fwdDefRateList = fwdDefRateService.list(fwdDefRateQueryWrapper);
+        fwdDefRateList.stream()
+                .sorted(Comparator.comparing(FwdDefRate::getEndDate))
+                .forEach(item -> {
+                    Pd pd = new Pd();
+                    pd.setEndDate(item.getEndDate().format(df));
+                    pd.setPd(BigDecimal.valueOf(Double.valueOf(item.getDefRate())).divide(BigDecimal.valueOf(100),6, RoundingMode.HALF_UP).toString());
+                    pdList.add(pd);
+                });
+        wilsonParamEntity.setPdList(pdList);
+
+        //Relativity 正负相关(无需排序)
+        QueryWrapper<FwdMacroDep> fwdMacroDepQueryWrapper = new QueryWrapper<>();
+        fwdMacroDepQueryWrapper.eq("fwd_plan_uuid", planUuid)
+        .orderByAsc("macro_code");
+        List<FwdMacroDep> fwdMacroDepList = fwdMacroDepService.list(fwdMacroDepQueryWrapper);
+        LinkedHashMap<String, String> relativityMap = new LinkedHashMap<>();
+        fwdMacroDepList.stream().forEach(item -> {
+            relativityMap.put(item.getMacroCode(), item.getCorrelation());
+        });
+        wilsonParamEntity.setRelativity(relativityMap);
+
+        //macro data info -> MacrovariableList
+        QueryWrapper<FwdMacroData> fwdMacroDataWrapper = new QueryWrapper<>();
+        fwdMacroDataWrapper.between("data_date", fwdPlan.getStartDate(), fwdPlan.getEndDate())
+                .orderByAsc("info_uuid");
+        List<FwdMacroData> fwdMacroDataList = fwdMacroDataService.list(fwdMacroDataWrapper);
+        List<String> infoUuidList = fwdMacroDataList.parallelStream().map(FwdMacroData::getInfoUuid).collect(Collectors.toList());
+
+        QueryWrapper<FwdMacroInfo> fwdMacroInfoWrapper = new QueryWrapper<>();
+        fwdMacroInfoWrapper.in("info_uuid", infoUuidList);
+        List<FwdMacroInfo> fwdMacroInfoList = fwdMacroInfoService.list(fwdMacroInfoWrapper);
+        Map<String, String> infoMap = new HashMap<>();
+        fwdMacroInfoList.forEach(item -> {
+            infoMap.put(item.getInfoUuid(), item.getMacroCode());
+        });
+
+        //处理data
+        Map<String, List<FwdMacroData>> fwdMacroDataMap = new LinkedHashMap<>();
+
+        for (FwdMacroData fwdMacroData : fwdMacroDataList) {
+            if(fwdMacroDataMap.containsKey(fwdMacroData.getInfoUuid())){
+                LinkedList<FwdMacroData> linkedList = new LinkedList<FwdMacroData>();
+                linkedList.addAll(fwdMacroDataMap.get(fwdMacroData.getInfoUuid()));
+                linkedList.add(fwdMacroData);
+                fwdMacroDataMap.put(fwdMacroData.getInfoUuid(),linkedList);
+
+                continue;
+            }
+            fwdMacroDataMap.put(fwdMacroData.getInfoUuid(),Arrays.asList(fwdMacroData));
+        }
+
+        Map<String, List<Macrovariable>> macrovariableMap = new LinkedHashMap<>();
+        fwdMacroDataMap.forEach((key, value) -> {
+            List<Macrovariable> macrovariableList = new ArrayList<>();
+            value.forEach(item -> {
+                Macrovariable macrovariable = new Macrovariable();
+                macrovariable.setDataDate(item.getDataDate().format(df));
+                macrovariable.setMacroValue(String.valueOf(item.getPdValue()));
+                macrovariableList.add(macrovariable);
+            });
+            macrovariableMap.put(infoMap.getOrDefault(key,key), macrovariableList);
+        });
+
+        wilsonParamEntity.setMacrovariableList(Arrays.asList(macrovariableMap));
+
+        return wilsonParamEntity;
     }
 }
