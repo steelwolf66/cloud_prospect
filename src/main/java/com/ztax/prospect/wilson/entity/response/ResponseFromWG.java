@@ -1,33 +1,13 @@
 package com.ztax.prospect.wilson.entity.response;
 
+import lombok.Data;
+
 import java.util.List;
-
+@Data
 public class ResponseFromWG {
-    private String message;
     private String uuid;
+    private List<Equation> equationList;
     private List<Unanalysis> unanalysisList;
+    private List<Vif> vif;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public List<Unanalysis> getUnanalysisList() {
-        return unanalysisList;
-    }
-
-    public void setUnanalysisList(List<Unanalysis> unanalysisList) {
-        this.unanalysisList = unanalysisList;
-    }
 }

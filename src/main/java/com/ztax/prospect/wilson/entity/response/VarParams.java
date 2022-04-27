@@ -1,11 +1,13 @@
 package com.ztax.prospect.wilson.entity.response;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
 public class VarParams {
     private BigDecimal coef;
-    private String p_value;
-    private BigDecimal rsquared;
+    private String pValue;
+    private String rsquared;
 
     public BigDecimal getCoef() {
         return coef;
@@ -15,19 +17,19 @@ public class VarParams {
         this.coef = coef;
     }
 
-    public String getP_value() {
-        return p_value;
+    public String getpValue() {
+        return pValue;
     }
 
-    public void setP_value(String p_value) {
-        this.p_value = p_value;
+    public void setpValue(String pValue) {
+        this.pValue = pValue;
     }
 
-    public BigDecimal getRsquared() {
+    public String getRsquared() {
         return rsquared;
     }
 
-    public void setRsquared(BigDecimal rsquared) {
+    public void setRsquared(String rsquared) {
         this.rsquared = rsquared;
     }
 }

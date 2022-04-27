@@ -1,4 +1,4 @@
-package com.ztax.prospect.wilson.entity;
+package com.ztax.prospect.wilson.entity.request;
 
 import java.util.List;
 import java.util.Map;

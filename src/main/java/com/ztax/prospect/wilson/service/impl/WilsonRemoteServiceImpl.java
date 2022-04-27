@@ -4,16 +4,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ztax.common.utils.JsonUtils;
 import com.ztax.prospect.fwd.entity.*;
 import com.ztax.prospect.fwd.service.impl.*;
-import com.ztax.prospect.wilson.entity.Macrovariable;
-import com.ztax.prospect.wilson.entity.Pd;
-import com.ztax.prospect.wilson.entity.WilsonParamEntity;
+import com.ztax.prospect.wilson.entity.request.Macrovariable;
+import com.ztax.prospect.wilson.entity.request.Pd;
+import com.ztax.prospect.wilson.entity.request.WilsonParamEntity;
+import com.ztax.prospect.wilson.entity.response.ResponseFromWG;
 import com.ztax.prospect.wilson.service.WilsonRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +27,20 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class WilsonRemoteServiceImpl implements WilsonRemoteService {
+
+    @Autowired
+    private FwdWilsonParamServiceImpl fwdWilsonParamService;
+    @Autowired
+    private FwdPlanServiceImpl fwdPlanService;
+    @Autowired
+    private FwdDefRateServiceImpl fwdDefRateService;
+    @Autowired
+    private FwdMacroDepServiceImpl fwdMacroDepService;
+    @Autowired
+    private FwdMacroDataServiceImpl fwdMacroDataService;
+    @Autowired
+    private FwdMacroInfoServiceImpl fwdMacroInfoService;
+
     @Override
     public WilsonParamEntity loadWilsonParamEntity() {
 //        WilsonParamEntity paramEntityFromJson = getParamEntityFromJson();
@@ -136,19 +156,6 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
         return entityFromJson;
     }
 
-    @Autowired
-    private FwdWilsonParamServiceImpl fwdWilsonParamService;
-    @Autowired
-    private FwdPlanServiceImpl fwdPlanService;
-    @Autowired
-    private FwdDefRateServiceImpl fwdDefRateService;
-    @Autowired
-    private FwdMacroDepServiceImpl fwdMacroDepService;
-    @Autowired
-    private FwdMacroDataServiceImpl fwdMacroDataService;
-    @Autowired
-    private FwdMacroInfoServiceImpl fwdMacroInfoService;
-
     @Override
     public WilsonParamEntity loadParamEntityFromDB(String planUuid) {
         WilsonParamEntity wilsonParamEntity = new WilsonParamEntity();
@@ -205,7 +212,7 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
                 .orderByAsc("info_uuid");
         List<FwdMacroData> fwdMacroDataList = fwdMacroDataService.list(fwdMacroDataWrapper);
         List<String> infoUuidList = fwdMacroDataList.parallelStream().map(FwdMacroData::getInfoUuid).collect(Collectors.toList());
-
+        //查码值
         QueryWrapper<FwdMacroInfo> fwdMacroInfoWrapper = new QueryWrapper<>();
         fwdMacroInfoWrapper.in("info_uuid", infoUuidList);
         List<FwdMacroInfo> fwdMacroInfoList = fwdMacroInfoService.list(fwdMacroInfoWrapper);
@@ -244,5 +251,23 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
         wilsonParamEntity.setMacrovariableList(Arrays.asList(macrovariableMap));
 
         return wilsonParamEntity;
+    }
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Override
+    public ResponseFromWG asyncCallRemote(String planUuid) {
+        LocalDateTime begin = LocalDateTime.now();
+        WilsonParamEntity wilsonParamEntity = this.loadParamEntityFromDB(planUuid);
+        HashMap paramMap = new HashMap();
+
+        RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        ResponseEntity<ResponseFromWG> responseEntity = template.postForEntity("http://103.79.202.131:31000/wilson/wilson_equation", wilsonParamEntity, ResponseFromWG.class, paramMap);
+        log.info("response:{}", responseEntity.getBody());
+//        ResponseFromWG responseFromWG = JsonUtils.toBean(responseEntity.getBody(), ResponseFromWG.class);
+        log.info("耗时：{}毫秒",Duration.between(begin,LocalDateTime.now()).toMillis());
+
+        return responseEntity.getBody() ;
     }
 }

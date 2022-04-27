@@ -2,7 +2,7 @@ package com.ztax.prospect.wilson.controller;
 
 import com.ztax.common.result.Result;
 import com.ztax.common.utils.JsonUtils;
-import com.ztax.prospect.wilson.entity.WilsonParamEntity;
+import com.ztax.prospect.wilson.entity.request.WilsonParamEntity;
 import com.ztax.prospect.wilson.entity.response.ResponseFromWG;
 import com.ztax.prospect.wilson.service.impl.WilsonRemoteServiceImpl;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @AllArgsConstructor
@@ -71,7 +73,7 @@ public class WilsonRemoteController {
     }
 
     @GetMapping(value = "/wilson/{planUuid}")
-    public Result remoteWilsonByDB(@PathVariable("planUuid")String planUuid) {
+    public Result remoteWilsonByDB(@PathVariable("planUuid") String planUuid) {
         WilsonParamEntity wilsonParamEntity = wilsonRemoteService.loadParamEntityFromDB(planUuid);
         log.info("wilsonParamEntityString:{}", wilsonParamEntity);
         HashMap paramMap = new HashMap();
@@ -81,5 +83,21 @@ public class WilsonRemoteController {
         log.info("response:{}", responseEntity.getBody());
 
         return Result.success(wilsonParamEntity);
+    }
+
+    @GetMapping(value = "/wilson/remote/{planUuid}")
+    public Result calculateByRemote(@PathVariable("planUuid") String planUuid) {
+        CompletableFuture.supplyAsync(() -> {
+            return wilsonRemoteService.asyncCallRemote(planUuid);
+        }).thenAcceptAsync(result -> {
+            log.info("result:{}", result);
+        }).handleAsync((res, ex) -> {
+            if (ex != null) {
+                log.error("call remote calculate exception ", ex);
+            }
+            return res;
+        });
+        log.info("calculating");
+        return Result.success();
     }
 }
