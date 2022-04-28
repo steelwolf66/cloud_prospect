@@ -13,9 +13,9 @@ import java.time.Duration;
 @Configuration
 public class RestTemplateConfig {
 
-    private Long connectionTimeout = 1000L;
+    private Long connectionTimeout = 10000L;
 
-    private Long readTimeout = 1000L;
+    private Long readTimeout = 10000L;
 
     @Bean //将RestTemplate装配为bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
