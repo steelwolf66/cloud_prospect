@@ -11,9 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * <p>
-    * 
-    * </p>
+方程信息表
  *
  * @since 2022-04-20
  */

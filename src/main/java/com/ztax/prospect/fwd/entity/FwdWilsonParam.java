@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.ztax.prospect.base.BaseEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,72 +13,86 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
-    * 
+    * 威尔逊模型参数表
     * </p>
  *
  * @since 2022-04-20
  */
 @TableName("fwd_wilson_param")
-public class FwdWilsonParam extends Model<FwdWilsonParam> {
+public class FwdWilsonParam extends BaseEntity<FwdPlan> {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 主键
+     */
     @TableId(value = "param_uuid", type = IdType.UUID)
     private String paramUuid;
 
+    /**
+     * 方案主键
+     */
     @TableField("fwd_plan_uuid")
     private String fwdPlanUuid;
 
+    /**
+     * 公司主键
+     */
     @TableField("company_uuid")
     private String companyUuid;
 
+    /**
+     * 单变量-P值
+     */
     @TableField("pd_value")
     private BigDecimal pdValue;
 
+    /**
+     * 单变量-R方
+     */
     @TableField("single_r_square")
     private BigDecimal singleRSquare;
 
+    /**
+     * 显著性水平-准入
+     */
     @TableField("slentry")
     private BigDecimal slentry;
 
+    /**
+     * 显著性水平-留存
+     */
     @TableField("slstay")
     private BigDecimal slstay;
 
+    /**
+     * 回归方程-P值
+     */
     @TableField("regress_pd_value")
     private BigDecimal regressPdValue;
 
+    /**
+     * 回归方程-R方
+     */
     @TableField("regress_r_square")
     private BigDecimal regressRSquare;
 
+    /**
+     * VIF算法
+     */
     @TableField("vif_type")
     private String vifType;
 
+    /**
+     * VIF阈值
+     */
     @TableField("vif_value")
     private BigDecimal vifValue;
 
+    /**
+     * 模型选择方式
+     */
     @TableField("model_entry_type")
     private String modelEntryType;
-
-    @TableField("create_id")
-    private String createId;
-
-    @TableField("create_time")
-    private LocalDateTime createTime;
-
-    @TableField("update_id")
-    private String updateId;
-
-    @TableField("update_time")
-    private LocalDateTime updateTime;
-
-    @TableField("delete_id")
-    private String deleteId;
-
-    @TableField("delete_time")
-    private LocalDateTime deleteTime;
-
-    @TableField("del_flg")
-    private Integer delFlg;
 
     public String getParamUuid() {
         return paramUuid;
@@ -175,63 +190,6 @@ public class FwdWilsonParam extends Model<FwdWilsonParam> {
         this.modelEntryType = modelEntryType;
         return this;
     }
-    public String getCreateId() {
-        return createId;
-    }
-
-    public FwdWilsonParam setCreateId(String createId) {
-        this.createId = createId;
-        return this;
-    }
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public FwdWilsonParam setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-        return this;
-    }
-    public String getUpdateId() {
-        return updateId;
-    }
-
-    public FwdWilsonParam setUpdateId(String updateId) {
-        this.updateId = updateId;
-        return this;
-    }
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public FwdWilsonParam setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-        return this;
-    }
-    public String getDeleteId() {
-        return deleteId;
-    }
-
-    public FwdWilsonParam setDeleteId(String deleteId) {
-        this.deleteId = deleteId;
-        return this;
-    }
-    public LocalDateTime getDeleteTime() {
-        return deleteTime;
-    }
-
-    public FwdWilsonParam setDeleteTime(LocalDateTime deleteTime) {
-        this.deleteTime = deleteTime;
-        return this;
-    }
-    public Integer getDelFlg() {
-        return delFlg;
-    }
-
-    public FwdWilsonParam setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
-        return this;
-    }
-
     @Override
     protected Serializable pkVal() {
         return this.paramUuid;
@@ -252,13 +210,6 @@ public class FwdWilsonParam extends Model<FwdWilsonParam> {
             ", vifType=" + vifType +
             ", vifValue=" + vifValue +
             ", modelEntryType=" + modelEntryType +
-            ", createId=" + createId +
-            ", createTime=" + createTime +
-            ", updateId=" + updateId +
-            ", updateTime=" + updateTime +
-            ", deleteId=" + deleteId +
-            ", deleteTime=" + deleteTime +
-            ", delFlg=" + delFlg +
         "}";
     }
 

@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.ztax</groupId>
             <artifactId>cloud-common</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.6</version>
         </dependency>
 
         <!-- ztax mybatis plus -->

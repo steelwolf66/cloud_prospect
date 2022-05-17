@@ -10,5 +10,5 @@ import com.ztax.prospect.fwd.entity.FwdPlan;
  * @since 2022-04-20
  */
 public interface FwdPlanService extends IService<FwdPlan> {
-
+    void deleteByIdWithFill(String pk);
 }

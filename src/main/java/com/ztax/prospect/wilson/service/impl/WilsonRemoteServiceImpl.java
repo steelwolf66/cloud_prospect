@@ -268,6 +268,10 @@ public class WilsonRemoteServiceImpl implements WilsonRemoteService {
 //        ResponseFromWG responseFromWG = JsonUtils.toBean(responseEntity.getBody(), ResponseFromWG.class);
         log.info("耗时：{}毫秒",Duration.between(begin,LocalDateTime.now()).toMillis());
 
+
+//        ResponseEntity<String> string = template.postForEntity("http://103.79.202.131:31000/wilson/wilson_equation", wilsonParamEntity, String.class, paramMap);
+//        log.info("result String:{}",string.getBody());
+
         return responseEntity.getBody() ;
     }
 }

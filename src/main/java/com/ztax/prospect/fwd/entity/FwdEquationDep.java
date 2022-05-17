@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * <p>
-    * 
+    * 方程关联信息表
     * </p>
  *
  * @since 2022-04-20

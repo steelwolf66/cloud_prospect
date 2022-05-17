@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
-    * 
+    * 场景表
     * </p>
  *
  * @since 2022-04-20

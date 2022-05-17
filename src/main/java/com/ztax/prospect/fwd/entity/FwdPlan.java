@@ -4,74 +4,68 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.ztax.prospect.base.BaseEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * <p>
-    * 
+    * 前瞻性依赖
     * </p>
  *
  * @since 2022-04-20
  */
 @TableName("fwd_plan")
-public class FwdPlan extends Model<FwdPlan> {
+public class FwdPlan extends BaseEntity<FwdPlan> {
 
     private static final long serialVersionUID = 1L;
 
+    //主键
     @TableId(value = "fwd_plan_uuid", type = IdType.UUID)
     private String fwdPlanUuid;
 
+    //方案名称
     @TableField("plan_name")
     private String planName;
 
+    //方案编码
     @TableField("plan_code")
     private String planCode;
 
+    //模型编码
+    @TableField("model_code")
+    private String modelCode;
+
+    //模型名称
     @TableField("model_name")
     private String modelName;
 
+    //开始日期
     @TableField("start_date")
     private LocalDateTime startDate;
 
+    //结束日期
     @TableField("end_date")
     private LocalDateTime endDate;
 
+    //业务类型
     @TableField("buss_type")
     private String bussType;
 
+    //业务类型名称
     @TableField("buss_type_name")
     private String bussTypeName;
 
+    //状态
     @TableField("plan_status")
     private String planStatus;
 
+    //是否锁定
     @TableField("is_lock")
-    private String isLock;
+    private Boolean isLock;
 
-    @TableField("create_id")
-    private String createId;
-
-    @TableField("create_time")
-    private LocalDateTime createTime;
-
-    @TableField("update_id")
-    private String updateId;
-
-    @TableField("update_time")
-    private LocalDateTime updateTime;
-
-    @TableField("delete_id")
-    private String deleteId;
-
-    @TableField("delete_time")
-    private LocalDateTime deleteTime;
-
-    @TableField("del_flg")
-    private Boolean delFlg;
-
+    //公司id
     @TableField("company_uuid")
     private String companyUuid;
 
@@ -108,6 +102,15 @@ public class FwdPlan extends Model<FwdPlan> {
         this.planCode = planCode;
         return this;
     }
+
+    public String getModelCode() {
+        return modelCode;
+    }
+
+    public void setModelCode(String modelCode) {
+        this.modelCode = modelCode;
+    }
+
     public String getModelName() {
         return modelName;
     }
@@ -156,68 +159,12 @@ public class FwdPlan extends Model<FwdPlan> {
         this.planStatus = planStatus;
         return this;
     }
-    public String getIsLock() {
+    public Boolean getIsLock() {
         return isLock;
     }
 
-    public FwdPlan setIsLock(String isLock) {
+    public FwdPlan setIsLock(Boolean isLock) {
         this.isLock = isLock;
-        return this;
-    }
-    public String getCreateId() {
-        return createId;
-    }
-
-    public FwdPlan setCreateId(String createId) {
-        this.createId = createId;
-        return this;
-    }
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public FwdPlan setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-        return this;
-    }
-    public String getUpdateId() {
-        return updateId;
-    }
-
-    public FwdPlan setUpdateId(String updateId) {
-        this.updateId = updateId;
-        return this;
-    }
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public FwdPlan setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-        return this;
-    }
-    public String getDeleteId() {
-        return deleteId;
-    }
-
-    public FwdPlan setDeleteId(String deleteId) {
-        this.deleteId = deleteId;
-        return this;
-    }
-    public LocalDateTime getDeleteTime() {
-        return deleteTime;
-    }
-
-    public FwdPlan setDeleteTime(LocalDateTime deleteTime) {
-        this.deleteTime = deleteTime;
-        return this;
-    }
-    public Boolean getDelFlg() {
-        return delFlg;
-    }
-
-    public FwdPlan setDelFlg(Boolean delFlg) {
-        this.delFlg = delFlg;
         return this;
     }
     public String getCompanyUuid() {
@@ -264,6 +211,7 @@ public class FwdPlan extends Model<FwdPlan> {
             "fwdPlanUuid=" + fwdPlanUuid +
             ", planName=" + planName +
             ", planCode=" + planCode +
+            ", modelCode=" + modelCode +
             ", modelName=" + modelName +
             ", startDate=" + startDate +
             ", endDate=" + endDate +
@@ -271,13 +219,6 @@ public class FwdPlan extends Model<FwdPlan> {
             ", bussTypeName=" + bussTypeName +
             ", planStatus=" + planStatus +
             ", isLock=" + isLock +
-            ", createId=" + createId +
-            ", createTime=" + createTime +
-            ", updateId=" + updateId +
-            ", updateTime=" + updateTime +
-            ", deleteId=" + deleteId +
-            ", deleteTime=" + deleteTime +
-            ", delFlg=" + delFlg +
             ", companyUuid=" + companyUuid +
             ", vdef1=" + vdef1 +
             ", vdef2=" + vdef2 +
